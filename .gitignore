@@ -41,3 +41,12 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+/build/
+/.dart_tool/
+/.idea/
+.DS_Store
+/android/.gradle/
+/android/app/google-services.json
+/ios/Pods/
+/ios/Runner/GoogleService-Info.plist
