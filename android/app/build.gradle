@@ -1,0 +1,50 @@
+plugins {
+    id "com.android.application"
+    id "kotlin-android"
+    // Flutter Gradle Plugin must be applied after Android and Kotlin plugins.
+    id "dev.flutter.flutter-gradle-plugin"
+}
+
+android {
+    namespace = "com.example.ngl_app"
+    compileSdk = 34  // Use the latest compileSdkVersion, or align with your Flutter version.
+    ndkVersion = "25.1.8937393"  // Adjust based on your environment.
+
+    compileOptions {
+        // Use Java 17 to ensure compatibility with Android Gradle Plugin.
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = "17"  // Set to 17 for compatibility with Java 17.
+    }
+
+    defaultConfig {
+        // Update the applicationId to match your desired package name.
+        applicationId = "com.example.ngl_app"
+        minSdk = 21  // Set to the minimum supported SDK version for your app.
+        targetSdk = 34  // Use the latest targetSdkVersion.
+        versionCode = 1
+        versionName = "1.0.0"
+    }
+
+    buildTypes {
+        release {
+            // TODO: Add a proper signing configuration for release builds.
+            // Using debug signing config for now to make release builds work.
+            signingConfig = signingConfigs.debug
+            minifyEnabled false
+            shrinkResources false
+        }
+    }
+}
+
+flutter {
+    source = "../.."  // Flutter project source directory.
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.8.10"
+
+}
