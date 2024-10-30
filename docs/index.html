@@ -23,16 +23,17 @@
             border-radius: 15px;
             width: 95%;
             max-width: 400px;
-            padding: 20px;
+            padding: 0; /* No padding to align div flush with the edges */
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            position: relative;
+            overflow: hidden; /* Ensures content stays inside the card */
         }
 
-        .message-header {
+        .header-container {
+            background-color: white;
             display: flex;
             align-items: center;
+            padding: 15px;
             gap: 15px;
-            margin-bottom: 10px;
         }
 
         .avatar {
@@ -50,11 +51,7 @@
         }
 
         .user-info {
-            background-color: white;
-            border-radius: 10px;
-            padding: 10px;
-            width: calc(100% - 80px);
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            flex-grow: 1; /* Ensures the text takes the remaining space */
         }
 
         .user-info p {
@@ -72,7 +69,7 @@
             border: 2px solid rgba(255, 255, 255, 0.5);
             border-radius: 10px;
             padding: 15px;
-            margin-bottom: 15px;
+            margin: 15px;
             position: relative;
         }
 
@@ -96,7 +93,8 @@
         }
 
         .send-button {
-            width: 100%;
+            width: calc(100% - 30px);
+            margin: 0 15px;
             background-color: black;
             color: white;
             font-weight: bold;
@@ -109,6 +107,7 @@
             font-size: 0.9rem;
             text-align: center;
             margin-top: 15px;
+            margin-bottom: 10px;
             line-height: 1.5;
         }
     </style>
@@ -133,15 +132,15 @@
 
     <!-- Main Content -->
     <div class="message-card" id="mainContent" style="display: none;">
-        <!-- Header with Avatar -->
-        <div class="message-header">
+        <!-- Header Section -->
+        <div class="header-container">
             <div class="avatar">
                 <img src="https://raw.githubusercontent.com/sujeet64/ngl-app/htmlbranch/docs/sujeet_ngl_profile.jpg" 
                      alt="Profile Image">
             </div>
             <div class="user-info">
-                <p><strong id="user-display">@sujeet.senthilkumar</strong></p>
-                <p>send me anonymous messages!</p>
+                <p id="user-display">@sujeet.senthilkumar</p>
+                <p><strong>send me anonymous messages!</strong></p>
             </div>
         </div>
 
