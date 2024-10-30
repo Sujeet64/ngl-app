@@ -31,19 +31,32 @@
         }
 
         .success-text {
-            font-size: 2rem;
+            font-size: 1.4em;
             font-weight: bold;
             margin: 0;
         }
 
         .btn-custom {
-            background-color: black;
+            width: 100%;  /* Full width of the message card */
+            margin: 15px 0;
+            background-color: #000000;
             color: white;
-            padding: 10px 20px;
-            font-size: 1.2rem;
-            border-radius: 30px;
-            text-decoration: none;
             font-weight: bold;
+            border: none;
+            border-radius: 30px;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            position: relative;
+            z-index: 2;
+            animation: shake 1s infinite;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
         }
 
         .link-text {
@@ -66,8 +79,8 @@
         <div class="info-text" id="tapCountContainer">
             👇 <strong id="tapCount">315</strong> <strong>people just tapped the button</strong> 👇
         </div>
-        <a href="#" class="btn-custom">Get your own messages!</a>
-        <a href="index.html" class="link-text">Send another message</a>
+        <button class="btn-custom" id="getButton" type="button">Get your own messages!</button>
+        <a href="index.html" class="link-text"><strong>Send another message</strong></a>
     </div>
     <script>
         let count = Math.floor(Math.random() * (500 - 300 + 1)) + 300; // Initial count between 300 and 500
@@ -82,25 +95,16 @@
             }
         }, 1000);
 
-        document.querySelector('.send-button').addEventListener('click', function() {
-            const message = document.getElementById('messageInput').value.trim();
+        // Event listener for the button click
+        document.getElementById('getButton').addEventListener('click', () => {
+            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
 
-            if (message) {
-                fetch('http://localhost:3000/api/models', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ message })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    console.log(data);
-                    window.location.href = 'success.html';
-                })
-                .catch(error => console.error('Error:', error));
+            if (/android/i.test(userAgent)) {
+                window.location.href = 'https://play.google.com/store/apps/details?id=com.nglreactnative&hl=en-US';
+            } else if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+                window.location.href = 'https://apps.apple.com/us/app/ngl-ask-me-anything/id1596550932';
             } else {
-                alert("Please enter a message before sending.");
+                alert("Your device is not supported.");
             }
         });
     </script>
