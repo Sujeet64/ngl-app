@@ -25,12 +25,9 @@
             gap: 15px;
         }
 
-        .checkmark {
-            font-size: 4rem;
-            color: white;
-            background: #28a745;
-            border-radius: 50%;
-            padding: 20px;
+        .success-image {
+            width: 100px; /* Adjust size as needed */
+            height: auto; /* Maintain aspect ratio */
         }
 
         .success-text {
@@ -54,6 +51,7 @@
             text-decoration: underline;
             font-size: 1rem;
         }
+
         .info-text {
             font-size: 0.9rem;
             text-align: center;
@@ -63,7 +61,7 @@
 </head>
 <body>
     <div class="success-container">
-        <div class="checkmark">✔</div>
+        <img src="https://raw.githubusercontent.com/sujeet64/ngl-app/htmlbranch/docs/sent.jpg" alt="Message Sent" class="success-image">
         <p class="success-text">Sent!</p>
         <div class="info-text" id="tapCountContainer">
             👇 <strong id="tapCount">315</strong> <strong>people just tapped the button</strong> 👇
