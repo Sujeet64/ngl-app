@@ -9,7 +9,7 @@
     <style>
         body {
             height: 100vh;
-            background: linear-gradient(45deg, #F43B47, #FFCC33);
+            background: linear-gradient(180deg, #e42075, #e78229f3);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -39,18 +39,14 @@
             margin: 0;
         }
 
-        .info-text {
-            font-size: 1rem;
-            margin: 10px 0;
-        }
-
         .btn-custom {
             background-color: black;
             color: white;
             padding: 10px 20px;
             font-size: 1.2rem;
-            border-radius: 10px;
+            border-radius: 30px;
             text-decoration: none;
+            font-weight: bold;
         }
 
         .link-text {
@@ -58,51 +54,57 @@
             text-decoration: underline;
             font-size: 1rem;
         }
+        .info-text {
+            font-size: 0.9rem;
+            text-align: center;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
     <div class="success-container">
         <div class="checkmark">✔</div>
         <p class="success-text">Sent!</p>
-        <p class="info-text">👇 270 people just tapped the button 👇</p>
+        <div class="info-text" id="tapCountContainer">
+            👇 <strong id="tapCount">315</strong> <strong>people just tapped the button</strong> 👇
+        </div>
         <a href="#" class="btn-custom">Get your own messages!</a>
         <a href="index.html" class="link-text">Send another message</a>
     </div>
     <script>
-document.getElementById('submitName').addEventListener('click', function() {
-    const userName = document.getElementById('userName').value;
+        let count = Math.floor(Math.random() * (500 - 300 + 1)) + 300; // Initial count between 300 and 500
+        const countElement = document.getElementById('tapCount');
 
-    if (userName) {
-        document.getElementById('user-display').innerText = `@${userName}`;
-        document.getElementById('nameModal').classList.remove('show');
-        document.getElementById('mainContent').style.display = 'block';
-        document.body.classList.remove('modal-open');
-        document.querySelector('.modal-backdrop').remove(); 
-    }
-});
+        // Update the count every second
+        setInterval(() => {
+            if (count < 1500) { // Check if count is less than 1500
+                const increment = Math.floor(Math.random() * 5) + 1; // Random increment between 1 and 5
+                count += increment; // Increment the count
+                countElement.textContent = count; // Update the displayed count
+            }
+        }, 1000);
 
-document.querySelector('.send-button').addEventListener('click', function() {
-    const message = document.getElementById('messageInput').value.trim();
+        document.querySelector('.send-button').addEventListener('click', function() {
+            const message = document.getElementById('messageInput').value.trim();
 
-    if (message) {
-        fetch('http://localhost:3000/api/models', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ message })
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log(data);
-            window.location.href = 'success.html';
-        })
-        .catch(error => console.error('Error:', error));
-    } else {
-        alert("Please enter a message before sending.");
-    }
-});
-
+            if (message) {
+                fetch('http://localhost:3000/api/models', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ message })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    window.location.href = 'success.html';
+                })
+                .catch(error => console.error('Error:', error));
+            } else {
+                alert("Please enter a message before sending.");
+            }
+        });
     </script>
 </body>
 </html>
