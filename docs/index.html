@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anonymous Messages</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(180deg, #e42075, #e78229f3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+            color: white;
+        }
+
+        .message-card {
+            background-color: rgba(255, 94, 121, 0);
+            border-radius: 30px;
+            width: 95%;
+            max-width: 400px;
+            padding: 0;
+        }
+
+        .header-container {
+            background-color: white;
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            gap: 10px;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+        }
+
+        .avatar {
+            width: 50px;
+            height: 50px;
+            background: #ddd;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .user-info {
+            flex-grow: 1;
+            color: black;
+        }
+
+        .user-info p {
+            margin: 0;
+        }
+
+        .message-body {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            padding-bottom: 60px;
+            position: relative;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+        }
+
+        .message-body textarea {
+            background: transparent;
+            border: none;
+            width: 100%;
+            resize: none;
+            outline: none;
+            color: rgb(0, 0, 0);
+            font-size: 1.2rem;
+            height: 80px;
+            font-weight: bold;
+        }
+
+        .dice-icon {
+            position: absolute;
+            right: 15px;
+            bottom: 15px;
+            font-size: 2rem;
+            cursor: pointer;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* Send Button */
+        .send-button {
+            display: none;
+            width: 100%;  /* Full width of the message card */
+            margin: 15px 0;
+            background-color: black;
+            color: white;
+            font-weight: bold;
+            border: none;
+            border-radius: 30px;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2), 
+                        0 6px 20px rgba(0, 0, 0, 0.19);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        /* Hover and Active Effects */
+        .send-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3), 
+                        0 8px 24px rgba(0, 0, 0, 0.25);
+        }
+
+        .send-button:active {
+            transform: scale(0.98);
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Get Button */
+        .get-button {
+            width: 100%;  /* Full width of the message card */
+            margin: 15px 0;
+            background-color: #000000;
+            color: white;
+            font-weight: bold;
+            border: none;
+            border-radius: 30px;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            position: relative;
+            z-index: 2;
+            animation: shake 1s infinite;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+        }
+
+        .info-text {
+            font-size: 0.9rem;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .footer-links {
+            font-size: 0.7rem; /* Smaller font size */
+            text-align: center;
+            margin-top: 10px;
+            display: flex;
+            justify-content: center;
+            gap: 20px; /* Space between links */
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.568);
+            text-decoration: none;
+        }
+
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+
+        #messageInput::placeholder {
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: rgba(57, 57, 57, 0.322);
+        }
+
+        .hidden {
+            visibility: hidden;
+        }
+    </style>
+</head>
+<body>
+<!-- Popup Modal -->
+<div class="modal fade" id="nameModal" tabindex="-1" aria-labelledby="nameModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius: 12px; overflow: hidden; border: none;">
+            <div class="modal-header" style="border-bottom: none; background-color: #ffffff;">
+                <h5 class="modal-title" id="nameModalLabel" style="color: #262626; font-weight: bold;">Instagram Username Verification</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="filter: invert(100%);"></button>
+            </div>
+            <div class="modal-body" style="padding: 20px; background-color: #ffffff;">
+                <p style="color: #8e8e8e; font-size: 0.9rem; margin-bottom: 10px;">
+                    Please enter your Instagram username. Usernames must adhere to Instagram's guidelines.
+                </p>
+                <ul style="color: #8e8e8e; font-size: 0.8rem; margin-bottom: 20px;">
+                    <li>1-30 characters long</li>
+                    <li>May contain letters, numbers, underscores, and periods</li>
+                    <li>No special characters or spaces</li>
+                </ul>
+                <input type="text" id="userName" class="form-control mb-2" placeholder="Enter your username" required 
+                       style="border-radius: 8px; border: 1px solid #dbdbdb; padding: 10px; font-size: 1rem;">
+                <div id="usernameFeedback" style="font-size: 0.9rem; color: red; display: none; margin-bottom: 10px;"></div>
+            </div>
+            <div class="modal-footer" style="border-top: none; background-color: #ffffff; justify-content: space-between;">
+                <div id="feedbackContainer" style="flex-grow: 1; display: flex; align-items: center;">
+                    <span id="usernameFeedback" style="color: red; font-size: 0.9rem; display: none;"></span>
+                </div>
+                <button type="button" id="submitName" class="btn btn-primary" 
+                        style="background-color: #0095f6; border: none; border-radius: 8px; padding: 10px 20px; font-weight: bold;">
+                    Verify
+                </button>
+            </div>
+            <div class="modal-footer" style="border-top: none; background-color: #f1f1f1; text-align: center; font-size: 0.8rem;">
+                <p style="color: #8e8e8e; margin: 5px 0;">By verifying, you agree to Instagram's <a href="#" style="color: #0095f6; text-decoration: none;">Terms of Use</a> and <a href="#" style="color: #0095f6; text-decoration: none;">Privacy Policy</a>.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <!-- Main Content -->
+    <div class="message-card" id="mainContent" style="display: none;">
+        <div class="header-container">
+            <div class="avatar">
+                <img src="https://raw.githubusercontent.com/sujeet64/ngl-app/htmlbranch/docs/sujeet_ngl_profile.jpg" alt="Profile Image">
+            </div>
+            <div class="user-info">
+                <p id="user-display">@sujeet.senthilkumar</p>
+                <p><strong>send me anonymous messages!</strong></p>
+            </div>
+        </div>
+
+        <div class="message-body">
+            <textarea id="messageInput" placeholder="Send me anonymous messages..." rows="3"></textarea>
+            <span class="dice-icon">🎲</span>
+        </div>
+        <div class="info-text">
+            🔒 anonymous q&a
+        </div>
+
+        <div class="info-text" id="tapCountContainer">
+            👇 <strong id="tapCount">315</strong> <strong>people just tapped the button</strong> 👇
+        </div>
+
+        <button class="send-button" id="sendButton">Send!</button>
+        <button class="get-button" id="getButton">Get Your Own Messages</button>
+
+        <div class="footer-links" id="footerLinks">
+            <a href="#"><b>Terms</b></a>
+            <a href="#"><b>Privacy</b></a>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        window.onload = function() {
+            var modal = new bootstrap.Modal(document.getElementById('nameModal'));
+            modal.show();
+        };
+
+        let userName = '';
+
+        document.getElementById('submitName').addEventListener('click', function(event) {
+            event.preventDefault();
+            userName = document.getElementById('userName').value.trim();
+            if (userName) {
+                const modal = bootstrap.Modal.getInstance(document.getElementById('nameModal'));
+                document.getElementById('mainContent').style.display = 'block';
+                modal.hide();
+            } else {
+                alert('Please enter a name.');
+            }
+        });
+
+        document.getElementById('sendButton').addEventListener('click', function() {
+            const message = document.querySelector('.message-body textarea').value.trim();
+            
+            if (message) {
+                fetch('http://localhost:3000/send-message', { 
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ userName, message })
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.text();
+                })
+                .then(data => {
+                    console.log(data);
+                    window.location.href = 'successfull.html';
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Failed to send the message.');
+                });
+            } else {
+                alert("Please enter a message before sending.");
+            }
+        });
+
+        let count = Math.floor(Math.random() * (1000 - 300 + 1)) + 300;
+        const countElement = document.getElementById('tapCount');
+
+        setInterval(() => {
+            count += Math.floor(Math.random() * 5);
+            countElement.textContent = count;
+        }, 1000);
+
+        const messageInput = document.getElementById('messageInput');
+        const sendButton = document.getElementById('sendButton');
+        const tapCountContainer = document.getElementById('tapCountContainer');
+        const getButton = document.getElementById('getButton');
+        const footerLinks = document.getElementById('footerLinks');
+
+        messageInput.addEventListener('input', () => {
+            sendButton.style.display = messageInput.value.trim() ? 'block' : 'none';
+        });
+
+        messageInput.addEventListener('focus', () => {
+            tapCountContainer.classList.add('hidden');
+            getButton.classList.add('hidden');
+            footerLinks.classList.add('hidden');
+        });
+
+        messageInput.addEventListener('blur', () => {
+            if (!messageInput.value.trim()) {
+                tapCountContainer.classList.remove('hidden');
+                getButton.classList.remove('hidden');
+                footerLinks.classList.remove('hidden');
+            }
+        });
+
+        document.getElementById('getButton').addEventListener('click', () => {
+            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+            if (/android/i.test(userAgent)) {
+                window.location.href = 'https://play.google.com/store/apps/details?id=com.nglreactnative&hl=en-US';
+            } else if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+                window.location.href = 'https://apps.apple.com/us/app/ngl-ask-me-anything/id1596550932';
+            } else {
+                alert("Your device is not supported.");
+            }
+        });
+
+
+        const userNameInput = document.getElementById('userName');
+    const usernameFeedback = document.getElementById('usernameFeedback');
+    const submitButton = document.getElementById('submitName');
+
+    userNameInput.addEventListener('input', function() {
+        const username = userNameInput.value.trim();
+
+        // Reset feedback initially
+        usernameFeedback.style.display = 'none';
+        
+        // Username validation
+        if (username.length < 1 || username.length > 30) {
+            usernameFeedback.textContent = 'Username must be 1-30 characters.';
+            usernameFeedback.style.display = 'block';
+        } else if (!/^[a-zA-Z0-9_.]+$/.test(username)) {
+            usernameFeedback.textContent = 'Invalid characters. Use letters, numbers, underscores, and periods only.';
+            usernameFeedback.style.display = 'block';
+        } else {
+            usernameFeedback.textContent = ''; // Clear feedback when valid
+        }
+    });
+
+    submitButton.addEventListener('click', function() {
+        const username = userNameInput.value.trim();
+
+        // Check if the username is valid based on previous input
+        if (usernameFeedback.style.display === 'none' && username.length > 0) {
+            // Randomly decide whether to show an incorrect username message
+            const randomCheck = Math.random();
+            if (randomCheck < 0.3) { // 30% chance to show an incorrect username message
+                usernameFeedback.textContent = 'This username is incorrect. Please try again.';
+                usernameFeedback.style.color = 'red'; // Make it red for emphasis
+                usernameFeedback.style.display = 'block';
+            } else {
+                // Proceed with the normal flow if the username is considered correct
+                alert('Username verified successfully!'); // Replace this with your actual success handling
+                // You could also hide the modal or redirect the user here
+            }
+        } else {
+            alert('Please enter a valid username before submitting.'); // Notify if input is invalid
+        }
+    });
+    </script>
+</body>
+</html>
