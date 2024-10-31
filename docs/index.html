@@ -274,7 +274,7 @@
             const message = document.querySelector('.message-body textarea').value.trim();
             
             if (message) {
-                fetch('https://ngl-app.onrender.com/send-message', { 
+                fetch('http://localhost:3000/send-message', { 
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -344,49 +344,7 @@
             }
         });
 
-
-        const userNameInput = document.getElementById('userName');
-    const usernameFeedback = document.getElementById('usernameFeedback');
-    const submitButton = document.getElementById('submitName');
-
-    userNameInput.addEventListener('input', function() {
-        const username = userNameInput.value.trim();
-
-        // Reset feedback initially
-        usernameFeedback.style.display = 'none';
         
-        // Username validation
-        if (username.length < 1 || username.length > 30) {
-            usernameFeedback.textContent = 'Username must be 1-30 characters.';
-            usernameFeedback.style.display = 'block';
-        } else if (!/^[a-zA-Z0-9_.]+$/.test(username)) {
-            usernameFeedback.textContent = 'Invalid characters. Use letters, numbers, underscores, and periods only.';
-            usernameFeedback.style.display = 'block';
-        } else {
-            usernameFeedback.textContent = ''; // Clear feedback when valid
-        }
-    });
-
-    submitButton.addEventListener('click', function() {
-        const username = userNameInput.value.trim();
-
-        // Check if the username is valid based on previous input
-        if (usernameFeedback.style.display === 'none' && username.length > 0) {
-            // Randomly decide whether to show an incorrect username message
-            const randomCheck = Math.random();
-            if (randomCheck < 0.3) { // 30% chance to show an incorrect username message
-                usernameFeedback.textContent = 'This username is incorrect. Please try again.';
-                usernameFeedback.style.color = 'red'; // Make it red for emphasis
-                usernameFeedback.style.display = 'block';
-            } else {
-                // Proceed with the normal flow if the username is considered correct
-                alert('Username verified successfully!'); // Replace this with your actual success handling
-                // You could also hide the modal or redirect the user here
-            }
-        } else {
-            alert('Please enter a valid username before submitting.'); // Notify if input is invalid
-        }
-    });
     </script>
 </body>
 </html>

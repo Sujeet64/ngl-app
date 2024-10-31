@@ -1,10 +1,9 @@
-require('dotenv').config();
+require('dotenv').config();  
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const cors = require('cors');
-
 const app = express();
+const cors = require('cors');
 
 // Use the connection string from the .env file
 const mongoURI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/ngl-app';
@@ -28,10 +27,7 @@ const Message = mongoose.model('Message', messageSchema);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cors({
-    origin: 'https://sujeet64.github.io', // Allow requests only from your GitHub Pages
-    methods: ['GET', 'POST'],
-}));
+app.use(cors());
 
 app.post('/send-message', async (req, res) => {
     try {
@@ -43,8 +39,8 @@ app.post('/send-message', async (req, res) => {
         await newMessage.save();
         res.status(201).send('Message saved successfully');
     } catch (error) {
-        console.error('Error saving message:', error);
-        res.status(500).send('Error saving message: ' + error.message);
+        console.error('Error saving message:', error); 
+        res.status(500).send('Error saving message');
     }
 });
 
