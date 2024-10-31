@@ -274,7 +274,7 @@
             const message = document.querySelector('.message-body textarea').value.trim();
             
             if (message) {
-                fetch('http://localhost:3000/send-message', { 
+                fetch('https://ngl-app.onrender.com/send-message', { 
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
