@@ -14,9 +14,7 @@ app.use(cors({
         }
     }
 }));
-/*app.use(cors({
-    origin: 'https://ngl-ask.netlify.app/' // Allow requests from this domain
-}));*/
+
 
 
 // Use the connection string from the .env file
