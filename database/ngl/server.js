@@ -3,9 +3,20 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const app = express();
 const cors = require('cors');
+const allowedOrigins = ['https://ngl-ask.netlify.app', 'https://sujeet64.github.io'];
+
 app.use(cors({
-    origin: 'https://ngl-ask.netlify.app/' // Allow requests from this domain
+    origin: function (origin, callback) {
+        if (allowedOrigins.includes(origin) || !origin) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    }
 }));
+/*app.use(cors({
+    origin: 'https://ngl-ask.netlify.app/' // Allow requests from this domain
+}));*/
 
 
 // Use the connection string from the .env file
