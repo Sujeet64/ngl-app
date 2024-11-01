@@ -47,6 +47,11 @@ app.post('/send-message', async (req, res) => {
     }
 });
 
+app.get('/', (req, res) => {
+    res.send('Server is running. Use POST /send-message to send messages.');
+});
+
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
