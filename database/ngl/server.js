@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const app = express();
 const cors = require('cors');
 app.use(cors({
-    origin: 'https://sujeet64.github.io' // Allow requests from this domain
+    origin: 'https://ngl-ask.netlify.app/' // Allow requests from this domain
 }));
 
 
