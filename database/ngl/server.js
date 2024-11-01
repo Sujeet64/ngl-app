@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const app = express();
 const cors = require('cors');
+app.use(cors());
 
 // Use the connection string from the .env file
 const mongoURI = 'mongodb+srv://sujeetsenthilkumar:Mongodbpass******6@experimentdb.a0csq.mongodb.net/?retryWrites=true&w=majority&appName=experimentdb';
