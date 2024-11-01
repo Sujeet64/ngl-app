@@ -1,4 +1,3 @@
-require('dotenv').config();  
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
@@ -6,7 +5,7 @@ const app = express();
 const cors = require('cors');
 
 // Use the connection string from the .env file
-const mongoURI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/ngl-app';
+const mongoURI = 'mongodb+srv://sujeetsenthilkumar:Mongodbpass******6@experimentdb.a0csq.mongodb.net/?retryWrites=true&w=majority&appName=experimentdb';
 
 mongoose.connect(mongoURI, {
     useNewUrlParser: true,
