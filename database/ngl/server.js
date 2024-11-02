@@ -25,7 +25,7 @@ const mongoURI = 'mongodb+srv://sujeetsenthilkumar:Mongodbpass******6@experiment
 mongoose.connect(mongoURI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    poolSize: 10, // Set connection pool size
+    maxPoolSize: 10, // Set connection pool size
 }).then(() => {
     console.log('Connected to MongoDB');
 }).catch((error) => {
