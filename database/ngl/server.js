@@ -57,6 +57,7 @@ app.post('/send-message', async (req, res) => {
 });
 
 app.get('/', (req, res) => {
+    console.log(`Ping received at ${new Date().toLocaleString()}`);
     res.send('Server is running. Use POST /send-message to send messages.');
 });
 
