@@ -17,18 +17,58 @@
             overflow: hidden;
             color: white;
         }
+        
+
+        .loading-spinner {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: rgb(254, 0, 0);
+        }
+        .spinner-border {
+            width: 3rem;
+            height: 3rem;
+        }
+
+        
+        #verifyingText {
+        color: #4a4a72; /* Dark Slate Blue for verifying text */
+        font-weight: bold;
+        font-size: 1rem;
+    }
+
+        .spinner-grow {
+            display: inline-block;
+            width: 1rem;
+            height: 1rem;
+            vertical-align: text-bottom;
+            background-color: #8e8e8e; /* Greyish color similar to Instagram */
+            border-radius: 50%;
+            animation: spinner-grow 0.75s linear infinite;
+        }
+
+        @keyframes spinner-grow {
+            0% { transform: scale(0); opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { transform: scale(1); opacity: 0; }
+        }
+
         #usernameFeedback {
-            color: rgb(241, 31, 31);
+            color: rgb(163, 162, 162);
             font-size: 0.9rem;
             margin-left: 10px;
             display: none;
-            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            position: relative;
         }
+
         .feedback-message {
             color: rgb(241, 31, 31);
             font-size: 0.9rem;
-            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif
-}
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        }
 
 
         .message-card {
@@ -193,39 +233,46 @@
 </head>
 <body>
 <!-- Popup Modal -->
-<div class="modal fade" id="nameModal" tabindex="-1" aria-labelledby="nameModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content" style="border-radius: 12px; overflow: hidden; border: none;">
-            <div class="modal-header" style="border-bottom: none; background-color: #ffffff;">
-                <h5 class="modal-title" id="nameModalLabel" style="color: #262626; font-weight: bold;">Instagram Username Verification</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="filter: invert(100%);"></button>
-            </div>
-            <div class="modal-body" style="padding: 20px; background-color: #ffffff;">
-                <p style="color: #8e8e8e; font-size: 0.9rem; margin-bottom: 10px;">
-                    Please enter your Instagram username. Usernames must adhere to Instagram's guidelines.
-                </p>
-                <ul style="color: #8e8e8e; font-size: 0.8rem; margin-bottom: 20px;">
-                    <li>1-30 characters long</li>
-                    <li>May contain letters, numbers, underscores, and periods</li>
-                    <li>No special characters or spaces</li>
-                </ul>
-                <input type="text" id="userName" class="form-control mb-2" placeholder="Enter your username" required 
-                       style="border-radius: 8px; border: 1px solid #dbdbdb; padding: 10px; font-size: 1rem;">
-                <div id="usernameFeedback" style="display: none;">Incorrect username, please try again.</div>
-            </div>
-            <div class="modal-footer" style="border-top: none; background-color: #ffffff; justify-content: flex-end;">
-                <button type="button" id="submitName" class="btn btn-primary" 
-                        style="background-color: #0095f6; border: none; border-radius: 8px; padding: 10px 20px; font-weight: bold;">
-                    Verify
-                </button>
-            </div>
-            
-            <div class="modal-footer" style="border-top: none; background-color: #f1f1f1; text-align: center; font-size: 0.8rem;">
-                <p style="color: #8e8e8e; margin: 5px 0;">By verifying, you agree to Instagram's <a href="#" style="color: #0095f6; text-decoration: none;">Terms of Use</a> and <a href="#" style="color: #0095f6; text-decoration: none;">Privacy Policy</a>.</p>
+
+<body>
+    <!-- Popup Modal -->
+    <div class="modal fade" id="nameModal" tabindex="-1" aria-labelledby="nameModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="border-radius: 12px; overflow: hidden; border: none;">
+                <div class="modal-header" style="border-bottom: none; background-color: #ffffff;">
+                    <h5 class="modal-title" id="nameModalLabel" style="color: #262626; font-weight: bold;">Instagram Username Verification</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="filter: invert(100%);"></button>
+                </div>
+                <div class="modal-body" style="padding: 20px; background-color: #ffffff;">
+                    <p style="color: #8e8e8e; font-size: 0.9rem; margin-bottom: 10px;">
+                        Please enter your Instagram username. Usernames must adhere to Instagram's guidelines.
+                    </p>
+                    <ul style="color: #8e8e8e; font-size: 0.8rem; margin-bottom: 20px;">
+                        <li>1-30 characters long</li>
+                        <li>May contain letters, numbers, underscores, and periods</li>
+                        <li>No special characters or spaces</li>
+                    </ul>
+                    <input type="text" id="userName" class="form-control mb-2" placeholder="Enter your username" required 
+                           style="border-radius: 8px; border: 1px solid #dbdbdb; padding: 10px; font-size: 1rem;">
+                    <div id="usernameFeedback">
+                        <span>Verifying...</span>
+                        <div class="spinner-grow" id="spinner" style="display: inline-block;"></div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="border-top: none; background-color: #ffffff; justify-content: flex-end;">
+                    <button type="button" id="submitName" class="btn btn-primary" 
+                            style="background-color: #0095f6; border: none; border-radius: 8px; padding: 10px 20px; font-weight: bold;">
+                        Verify
+                    </button>
+                </div>
+                
+                <div class="modal-footer" style="border-top: none; background-color: #f1f1f1; text-align: center; font-size: 0.8rem;">
+                    <p style="color: #8e8e8e; margin: 5px 0;">By verifying, you agree to Instagram's <a href="#" style="color: #0095f6; text-decoration: none;">Terms of Use</a> and <a href="#" style="color: #0095f6; text-decoration: none;">Privacy Policy</a>.</p>
+                </div>
             </div>
         </div>
     </div>
-</div>
+
 
     <!-- Main Content -->
     <div class="message-card" id="mainContent" style="display: none;">
@@ -276,47 +323,42 @@
         return regex.test(username);
     }
 
-    // Display feedback on invalid username during input
     document.getElementById('userName').addEventListener('input', function() {
-        const username = this.value.trim();
-        const feedbackElement = document.getElementById('usernameFeedback');
-        
-        if (!validateUsername(username)) {
-            feedbackElement.style.display = 'block';
-            feedbackElement.textContent = 'Invalid username';
-        } else {
-            feedbackElement.style.display = 'none';
-        }
-    });
+            const username = this.value.trim();
+            const feedbackElement = document.getElementById('usernameFeedback');
+            
+            if (!validateUsername(username)) {
+                feedbackElement.style.display = 'block';
+                feedbackElement.textContent = 'Invalid username';
+                document.getElementById('spinner').style.display = 'none';
+            } else {
+                feedbackElement.style.display = 'none';
+            }
+        });
 
-    // Handle submit and validate on second attempt
-    document.getElementById('submitName').addEventListener('click', function(event) {
-    event.preventDefault();
-    userName = document.getElementById('userName').value.trim();
-    const feedbackElement = document.getElementById('usernameFeedback');
+   // Handle submit and validate on the first attempt with loading delay
+   document.getElementById('submitName').addEventListener('click', function(event) {
+            event.preventDefault();
+            userName = document.getElementById('userName').value.trim();
+            const feedbackElement = document.getElementById('usernameFeedback');
+            const spinner = document.getElementById('spinner');
 
-    if (!validateUsername(userName)) {
-        // Show alert if the username is invalid
-        alert('Please enter a valid username.');
-    } else {
-        // Increment attempt count
-        attemptCount++;
-        
-        // Show error message in red on the first incorrect attempt
-        feedbackElement.style.display = 'block';
-        feedbackElement.style.color = 'red';  // Set text color to red
-        
-        if (attemptCount === 1) {
-            feedbackElement.style.display = 'block';
-            feedbackElement.innerHTML = 'Incorrect username, please try again.'; // Remove <strong> tags
-            feedbackElement.className = 'feedback-message'; // Apply the CSS class
-        } else if (attemptCount === 2) {
-            const modal = bootstrap.Modal.getInstance(document.getElementById('nameModal'));
-            document.getElementById('mainContent').style.display = 'block';
-            modal.hide();
-        }
-    }
-});
+            if (!validateUsername(userName)) {
+                alert('Please enter a valid username.');
+            } else {
+                feedbackElement.style.display = 'block';
+                spinner.style.display = 'inline-block';
+
+                setTimeout(() => {
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('nameModal'));
+                    document.getElementById('mainContent').style.display = 'block';
+                    modal.hide();
+                    feedbackElement.style.display = 'none';
+                    spinner.style.display = 'none'; // Hide the spinner after verification
+                }, 4000);
+            }
+        });
+
 
     // Message sending logic
     document.getElementById('sendButton').addEventListener('click', function() {
