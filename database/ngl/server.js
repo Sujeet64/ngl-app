@@ -18,7 +18,7 @@ app.use(cors({
 
 
 // Use the connection string from the .env file
-const mongoURI = 'mongodb://localhost:27017/ngl';
+const mongoURI = 'no?retryWrites=true&w=majority&appName=ngl';
 
 mongoose.connect(mongoURI, {
     useNewUrlParser: true,
