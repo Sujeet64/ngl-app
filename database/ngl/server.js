@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const app = express();
 const cors = require('cors');
-const allowedOrigins = ['https://ngl-ask.netlify.app', 'https://sujeet64.github.io'];
+const allowedOrigins = ['https://ngl-ask.netlify.app', 'https://ftnithish.github.io/ngl-final/'];
 
 app.use(cors({
     origin: function (origin, callback) {
@@ -18,7 +18,7 @@ app.use(cors({
 
 
 // Use the connection string from the .env file
-const mongoURI = 'mongodb+srv://sujeetsenthilkumar:Mongodbpass******6@experimentdb.a0csq.mongodb.net/?retryWrites=true&w=majority&appName=experimentdb';
+const mongoURI = 'mongodb://localhost:27017/ngl';
 
 mongoose.connect(mongoURI, {
     useNewUrlParser: true,
